@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+
+      <meta charset="utf-8">
+      <title> Affichage d'un spectacle </title>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <!-- lien vers le script contenant la fonction getXMLHttpRequest-->
+      <script type="text/javascript" src="oXHR.js"></script>
+      <script type="text/javascript">
+
+      // Récupération de la variable
+
+      NumSpectacle = 0 ;
+      var requete = window.location.search ;
+      if (requete) 
+      {
+        requete=requete.substring(1) ;
+        requete = unescape(requete) ; 
+        eval(requete); 
+      }
+
+      </script>
+
+      <script type="text/javascript">
+
+      // pointeur sur la position de l'article courant dans le catalogue
+      var id = NumSpectacle-1;
+      // initialisation du catalogue
+      var catalogue = [];
+
+      function executerRequete(callback) {
+          // on vérifie si le catalogue a déjà été chargé pour n'exécuter la requête AJAX
+          // qu'une seule fois
+          if (catalogue.length === 0) {
+              // on récupère un objet XMLHttpRequest
+              var xhr = getXMLHttpRequest();
+              // on réagit à l'événement onreadystatechange
+              xhr.onreadystatechange = function() {
+                  // test du statut de retour de la requête AJAX
+                  if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
+                      // on désérialise le catalogue et on le sauvegarde dans une variable
+                      catalogue = JSON.parse(xhr.responseText);
+                      // on lance la fonction de callback avec le catalogue récupéré
+                      callback();
+                  }
+              }
+              // la requête AJAX : lecture de data.json
+              xhr.open("GET", "spectacles.json", true);
+              xhr.send();
+          } else {
+              // on lance la fonction de callback avec le catalogue déjà récupéré précédemment
+              callback();
+          }
+      }
+
+      function lireSuivant() {
+          // connaitre le nombre d'articles dans le catalogue
+          var longueur = catalogue.length;
+          // manipulation du DOM pour afficher les caractéristiques de l'article
+          document.getElementById("image").innerHTML = "<img src='img/"+ catalogue[id].Spe_affiche + "'><span class='card-title'>"+catalogue[id].Spe_titre+"</span>";
+          document.getElementById("annee").innerHTML = catalogue[id].Spe_annee;
+          document.getElementById("mes").innerHTML = catalogue[id].Spe_mes;
+          document.getElementById("resume").innerHTML = catalogue[id].Spe_resume_long;
+
+          if (id < longueur - 1) {
+              id++;
+          }
+      }
+      
+      function lirePrecedent() {
+          document.getElementById("image").innerHTML = "<img src='img/"+ catalogue[id].Spe_affiche + "'><span class='card-title'>"+catalogue[id].Spe_titre+"</span>";
+          document.getElementById("annee").innerHTML = catalogue[id].Spe_annee;
+          document.getElementById("mes").innerHTML = catalogue[id].Spe_mes;
+          document.getElementById("resume").innerHTML = catalogue[id].Spe_resume_long;
+
+          if (id > 0) {
+              id--;
+          }
+      }
+
+      // on initialise la lecture au premier élément
+      executerRequete(lireSuivant);
+      
+      </script>
+
+
+      </head>
+      <body>
+
+      <!-- ////////////////////////////// MENU ////////////////////////////////// -->
+
+      <nav>
+        <div class="nav-wrapper">
+          <a href="#!" class="brand-logo">myKomidi</a>
+          <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+          <ul class="right hide-on-med-and-down">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="spectacles.html">Spectacles</a></li>
+            <li><a href="salles.html">Salles</a></li>
+          </ul>
+          <ul class="side-nav" id="mobile-demo">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="spectacles.html">Spectacles</a></li>
+            <li><a href="salles.html">Salles</a></li>
+          </ul>
+        </div>
+      </nav>
+
+
+      <!-- /////////////////////////////////// CONTENU //////////////////////////////// -->
+
+      <div class="row">
+        <div class="col s12 m7">
+          <div class="card">
+            <div id="image" class="card-image"></div>
+            <div class="card-content">
+                <label>Annee</label> : <label id = "annee"></label><br>
+                <label>Metteur en scène</label> : <label id = "mes"></label><br>
+                <label>Resume</label> : <label id="resume"></label>
+            </div>
+            <div class="card-action">
+
+            <button class="btn waves-effect waves-light btn-xs" type="submit" onclick="executerRequete(lirePrecedent)"><span class="glyphicon glyphicon-step-backward"> </span> Précedent</button>
+
+              <button class="btn waves-effect waves-light btn-xs" type="submit" onclick="executerRequete(lireSuivant)"><span class="glyphicon glyphicon-play"> </span> Suivant</button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ///////////////////////// BAS DE PAGE /////////////////////////////// -->
+
+      <footer class="page-footer">
+        <div class="footer-copyright">
+          <div class="container">
+          Application créée dans le cadre du lycée Pierre Poivre
+          </div>
+        </div>
+      </footer>
+
+
+        <!--Import jQuery before materialize.js-->
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEwg99kvHy8Pt1A_UCQQwzqzfIJS9YIdg &callback=myMap"></script>
+      <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>            
+      <script type="text/javascript" src="js/materialize.js"></script>
+
+    </body>
+</html>
+
+

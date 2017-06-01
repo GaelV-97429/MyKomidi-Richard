@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+  <html>
+    <head>
+
+      <meta charset="utf-8">
+      <title> Affichage des spectacles </title>
+      <!--Import Google Icon Font-->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <!--Import materialize.css-->
+      <link type="text/css" rel="stylesheet" href="css/materialize.css"  media="screen,projection"/>
+      <!--Let browser know website is optimized for mobile-->
+      <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+      <!-- lien vers le script contenant la fonction getXMLHttpRequest-->
+      <script type="text/javascript" src="oXHR.js"></script>
+      <script type="text/javascript">
+
+      // Faire passer une variable
+
+      setTimeout(function(){
+          $("ul > a").on("click", function() {                  
+              var requete="NumSpectacle="+$(this).attr('id')+";";
+              requete = escape(requete);
+              window.location.href = "spectacle.html?" + requete ;
+      });
+      }, 1000);
+
+      function AfficheSpectacle() {
+        var xmlhttp, myObj, x, txt = "";
+        xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                myObj = JSON.parse(this.responseText);
+                for (x in myObj) {
+                    console.log(x);
+                    txt += 
+                        "<a id="+myObj[x].Spe_id+" href='#' class='collection-item avatar'> <img src='img/"+ myObj[x].Spe_affiche + "' alt='' class='circle'> <span class='title'>" + myObj[x].Spe_titre + "</span> <div style='color:#222'><p>" + myObj[x].Spe_mes +"<br> <small>"+ myObj[x].Spe_resume_court +"</p></small></div></a>"
+                }
+                document.getElementById("demo").innerHTML = txt;
+            }
+        };
+        xmlhttp.open("GET", "spectacles.json", true);
+        xmlhttp.send();
+      }
+
+      AfficheSpectacle();
+      </script>
+
+    </head>
+
+    <body>
+
+    <!-- ////////////////////////////// MENU ////////////////////////////////// -->
+
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#!" class="brand-logo">myKomidi</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+
+        <ul class="right hide-on-med-and-down">
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="spectacles.html">Spectacles</a></li>
+          <li><a href="salles.html">Salles</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="spectacles.html">Spectacles</a></li>
+          <li><a href="salles.html">Salles</a></li>
+        </ul>
+      </div>
+    </nav>
+
+      <!-- /////////////////////////// CONTENU ///////////////////////////////// -->
+
+      <ul class="collection" id="demo"></ul>
+
+
+      <!-- ///////////////////////// BAS DE PAGE /////////////////////////////// -->
+
+      <footer class="page-footer">
+        <div class="footer-copyright">
+          <div class="container">
+          Application créée dans le cadre du lycée Pierre Poivre
+          </div>
+        </div>
+      </footer>
+
+
+        <!--Import jQuery before materialize.js-->
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCEwg99kvHy8Pt1A_UCQQwzqzfIJS9YIdg &callback=myMap"></script>
+      <script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>            
+      <script type="text/javascript" src="js/materialize.js"></script>
+
+
+    </body>
+  </html>
+
